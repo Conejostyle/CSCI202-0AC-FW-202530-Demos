@@ -65,6 +65,8 @@ public:
     const static std::map<std::string, drizzleType> strToDrizzle;
     const static std::map<toppingType, std::string> topToStr;
     const static std::map<std::string, toppingType> strToTop;
+    bool operator==(const donut &otherDonut);
+    bool operator!=(const donut &otherDonut);
 
 private:
     icingType icing;

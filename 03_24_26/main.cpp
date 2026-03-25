@@ -2,6 +2,7 @@
 #include <string>
 #include <limits>
 #include "donut.h"
+#include "unorderedLinkedList.h"
 #include "linkedlist.h"
 
 bool intInRange(int num, int low, int high);
@@ -20,7 +21,23 @@ void toppingPrompt(std::string);
 
 int main()
 {
-    linkedListType<int> numList;
+    unorderedLinkedList<int> numList;
+    numList.insert(8);
+    numList.insert(6);
+    numList.insert(3);
+    unorderedLinkedList<donut> donutList;
+    std::string icing = getIcing();
+    std::string topping = getTopping(icing);
+    std::string drizzle = getDrizzle();
+    donut d(icing, topping, drizzle);
+    donutList.insert(d);
+    numList.print(std::cout);
+    std::cout << std::endl;
+    donutList.print(std::cout, "\n");
+    std::cout << std::endl;
+    /*     donut *x = &donutList.front();
+        x->setDrizzle("caramel");
+        donutList.print(std::cout, "\n"); */
 
     return 0;
 };

@@ -137,3 +137,12 @@ const std::map<std::string, drizzleType> donut::strToDrizzle =
      {"raspberry", drizzleType::RASPBERRY},
      {"special", drizzleType::SPECIALDRIZZLE},
      {"none", drizzleType::NODRIZZLE}};
+
+bool donut::operator==(const donut &otherDonut)
+{
+    return this->icing == otherDonut.icing && this->topping == otherDonut.topping && this->drizzle == otherDonut.drizzle;
+}
+bool donut::operator!=(const donut &otherDonut)
+{
+    return !(*this == otherDonut);
+}
