@@ -5,6 +5,7 @@ template <class t>
 class stackADT
 {
 public:
+    const static int DEFAULT_STACK_SIZE = 100;
     virtual void initializeStack() = 0;
     virtual bool isFullStack() const = 0;
     virtual bool isEmptyStack() const = 0;
