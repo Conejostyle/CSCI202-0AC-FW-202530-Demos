@@ -174,7 +174,7 @@ void binaryTreeType<t>::postorder(binaryNode<t> *currentNode, std::ostringstream
     if (currentNode != nullptr)
     {
         postorder(currentNode->lLink, out);
-        postorderI(currentNode->rLink, out);
+        postorder(currentNode->rLink, out);
         out << *currentNode->data << " ";
     }
 }
