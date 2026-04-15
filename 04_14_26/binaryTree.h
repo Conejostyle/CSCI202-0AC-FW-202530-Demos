@@ -27,7 +27,7 @@ public:
     std::string inorderTraversal() const;
     std::string preorderTraversal() const;
     std::string postorderTraversal() const;
-    virtual void insert(cosnt t &insertItem) = 0;
+    virtual void insert(const t &insertItem) = 0;
     virtual bool search(const t &searchItem) = 0;
     virtual void deleteNode(const t &deleteItem) = 0;
 
