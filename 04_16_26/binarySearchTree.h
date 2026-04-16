@@ -30,10 +30,8 @@ public:
     bool search(const t &searchItem);
     void deleteNode(const t &deleteItem);
 
-protected:
-    int (*compare)(const t &item1, const t &item2);
-
 private:
+    int (*compare)(const t &item1, const t &item2);
     void deleteFromTree(binaryNode<t> *&currentNode);
     bool search(const t &searchItem, binaryNode<t> *currentNode);
     void insert(binaryNode<t> *&insertItem, binaryNode<t> *&currentNode);
