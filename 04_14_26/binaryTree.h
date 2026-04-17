@@ -10,11 +10,6 @@ struct binaryNode
     binaryNode<t> *lLink;
     binaryNode<t> *rLink;
     ~binaryNode() { delete data; };
-    int bfactor;
-    t &operator*()
-    {
-        return *data;
-    };
 };
 
 template <class t>

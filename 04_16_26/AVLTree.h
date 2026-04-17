@@ -39,13 +39,13 @@ private:
     Iterator find(const t &searchItem, binaryNode<t> *currentNode) const;
     int calculateBalance(binaryNode<t> *currentNode);
     bool isBalanced(binaryNode<t> *currentNode);
-    void balanceTree(binaryNode<t> *&u);
-    void deleteFronTree(binaryNode<t> *&u, const t &key);
+    void balanceTree(binaryNode<t> *&currentNode);
+    void deleteFronTree(binaryNode<t> *&currentNode, const t &key);
     binaryNode<t> *findMin(binaryNode<t> *node) const;
 };
 
 template <class t>
-AVLTree<t>::AVLTree(int (*comp)(const t &, const t &)) : binarySearchTree(comp)
+AVLTree<t>::AVLTree(int (*comp)(const t &, const t &)) : binarySearchTree<t>(comp)
 {
 }
 
@@ -62,9 +62,28 @@ void AVLTree<t>::insert(const t &insertItem)
 }
 
 template <class t>
+inline void AVLTree<t>::deleteNode(const t &deleteItem)
+{
+    try
+    {
+        deleteFromTree(this->root, deleteItem);
+    }
+    catch (const std::exception &e)
+    {
+        std::cerr << e.what() << '\n';
+    }
+}
+
+template <class t>
+inline bool AVLTree<t>::isBalanced()
+{
+    return isBalanced(this->root);
+}
+
+template <class t>
 void AVLTree<t>::balanceFromLeft(binaryNode<t> *&currentNode)
 {
-    binaryNode *lChild;
+    binaryNode<t> *lChild;
     binaryNode<t> *lChild_RChild;
     lChild = currentNode->lLink;
     switch (lChild->bfactor)
@@ -102,7 +121,7 @@ void AVLTree<t>::balanceFromLeft(binaryNode<t> *&currentNode)
 template <class t>
 inline void AVLTree<t>::balanceFromRight(binaryNode<t> *&currentNode)
 {
-    binaryNode *rChild;
+    binaryNode<t> *rChild;
     binaryNode<t> *rChild_LChild;
     rChild = currentNode->rLink;
     switch (rChild->bfactor)
@@ -137,6 +156,34 @@ inline void AVLTree<t>::balanceFromRight(binaryNode<t> *&currentNode)
         rotateToLeft(currentNode);
         break;
     }
+}
+
+template <class t>
+inline void AVLTree<t>::rotateToLeft(binaryNode<t> *&currentNode)
+{
+    binaryNode<t> *newRootNode;
+    if (currentNode == nullptr || currentNode->rLink == nullptr)
+    {
+        throw std::out_of_range("Cannot rotate empty node.");
+    }
+    newRootNode = currentNode->rLink;
+    currentNode->rLink = newRootNode->lLink;
+    newRootNode->lLink = currentNode;
+    currentNode = newRootNode;
+}
+
+template <class t>
+inline void AVLTree<t>::rotateToRight(binaryNode<t> *&currentNode)
+{
+    binaryNode<t> *newRootNode;
+    if (currentNode == nullptr || currentNode->lLink == nullptr)
+    {
+        throw std::out_of_range("Cannot rotate empty node.");
+    }
+    newRootNode = currentNode->lLink;
+    currentNode->lLink = newRootNode->rLink;
+    newRootNode->rLink = currentNode;
+    currentNode = newRootNode;
 }
 
 template <class t>
@@ -197,6 +244,97 @@ void AVLTree<t>::insertIntoAVL(binaryNode<t> *&currentNode, binaryNode<t> *newNo
             }
         }
     }
+}
+
+template <class t>
+inline int AVLTree<t>::calculateBalance(binaryNode<t> *currentNode)
+{
+    calculateBalance(currentNode->lLink);
+    calculateBalance(currentNode->rLink);
+    currentNode->bfactor = this->height(currentNode->rLink) - this->height(currentNode->lLink);
+    return currentNode->bfactor;
+}
+
+template <class t>
+inline bool AVLTree<t>::isBalanced(binaryNode<t> *currentNode)
+{
+    if (currentNode == nullptr)
+    {
+        return true;
+    }
+    bool balance = !(currentNode->bfactor > 1 || currentNode->bfactor < -1) return balance && isBalanced(currentNode->lLink) && isBalanced(currentNode->rLink);
+}
+
+template <class t>
+inline void AVLTree<t>::balanceTree(binaryNode<t> *&currentNode)
+{
+    int balance = this->height(currentNode->rLink) - this->height(currentNode->lLink);
+    if (balance > 1)
+    {
+        balanceFromRight(currentNode);
+    }
+    else if (balance < -1)
+    {
+        balanceFromLeft(currentNode);
+    }
+}
+
+template <class t>
+inline void AVLTree<t>::deleteFronTree(binaryNode<t> *&currentNode, const t &key)
+{
+    binaryNode<t> *temp;
+    binaryNode<t> *replace;
+    if (currentNode == nullptr)
+    {
+        throw std::invalid_argument("The item to be deleted is not in the tree");
+    }
+    int compareValue = this->compare(key, **currentNode);
+    if (compareValue == -1)
+    {
+        deleteFromTree(currentNode->lLink, key);
+    }
+    else if (compareValue == 1)
+    {
+        deleteFromTree(currentNode->rLink, key);
+    }
+    else
+    {
+        temp = currentNode;
+        if (currentNode->lLink == nullptr && currentNode->rLink == nullptr)
+        {
+            currentNode = nullptr;
+            delete temp;
+        }
+        else if (currentNode->lLink == nullptr)
+        {
+            currentNode = currentNode->rLink;
+            delete temp;
+        }
+        else if (currentNode->rLink == nullptr)
+        {
+            currentNode = currentNode->lLink;
+            delete temp;
+        }
+        else
+        {
+            temp = findMin(currentNode->rLink);
+            currentNode->data = temp->data;
+            deleteFromTree(currentNode->rLink, **temp);
+        }
+    }
+    balanceTree(currentNode);
+    calculateBalance(currentNode);
+}
+
+template <class t>
+inline binaryNode<t> *AVLTree<t>::findMin(binaryNode<t> *currentNode) const
+{
+    binaryNode<t> *min = currentNode;
+    while (min && min->lLink != nullptr)
+    {
+        min = min->lLink;
+    }
+    return min;
 }
 
 #endif
