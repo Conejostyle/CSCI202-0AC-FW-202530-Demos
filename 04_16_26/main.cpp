@@ -6,6 +6,9 @@
 #include <fstream>
 #include <chrono>
 
+// M05 part b lab
+//  create a node for a b-tree.
+
 int main()
 {
     binarySearchTree<int> tree3;
